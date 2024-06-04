@@ -2,7 +2,9 @@ import time
 from datetime import datetime
 
 username = [
-    {'nama' : 'Ferran', 'username' : 'rannn', 'password' : 'password' }
+    {'nama' : 'Ferran', 'username' : 'rannn', 'password' : 'password'}, 
+    {'nama' : 'Andrew', 'username' : 'ndree', 'password' : 'password' },
+    {'nama' : 'Kasmal', 'username' : 'mall', 'password' : 'password' }
 ]
 
 dir = [
@@ -110,10 +112,15 @@ def login(list1=username):
     exit_flag = False  
     user = None
 
-    for user_data in list1:
-        while not exit_flag:
-            username_inp = input("Masukkan Username Anda: ")
-            time.sleep(0.1)
+    while not exit_flag:
+        username_inp = input("Masukkan Username Anda: ")
+        time.sleep(0.1)
+
+        if username_inp.lower() == 'exit':
+            exit_flag = True  
+            break  
+
+        for user_data in list1:
             if username_inp == user_data['username']:
                 while not exit_flag:
                     password_inp = input("Masukkan Password Anda: ")
@@ -125,16 +132,16 @@ def login(list1=username):
                         exit_flag = True  
                     elif password_inp.lower() == 'exit':
                         exit_flag = True  
+                        break  
                     else:
                         print("Salah Masukkan Password")
-            elif username_inp.lower() == 'exit':
-                exit_flag = True  
-            else:
-                print("Salah Masukkan Username")
+                break 
+        else:
+            print("Salah Masukkan Username")
 
     return user
 
-def back(command,awalan):
+def back(command,awalan,access):
     nama_direktori = command.split(maxsplit=1)[1]
     if nama_direktori == "..":
         if awalan == 0:
@@ -159,7 +166,7 @@ def back(command,awalan):
         else:
             print (f"'{command}' tidak dikenal")
             return awalan
-    elif nama_direktori == 'ferran':
+    elif nama_direktori == access.lower():
         if awalan == 1:
             return 0
         elif awalan == 2:
@@ -212,77 +219,85 @@ def waktu ():
 
 def shutdown():
     print("Menutup sistem operasi...")
-    time.sleep(1)
+    time.sleep(2)
     print("Sistem telah dimatikan.")
-    clear_screen()
 
 # Mulai nya dari sini
 # Proses Booting
 
+clear_screen()
 boot_process()
 print()
 
-# clear_screen()
+clear_screen()
+spesifikasi()
 
-# spesifikasi()
-# print()
+print()
+while True: 
+    jwb = input ("Masukkan Ingin Login atau Shutdown : ")
+    print()
+    if jwb.lower() == "login":
+        print()
+        access = login(username)
+        if access:
+            awalan = 0
+            while True:
+                if awalan == 0:
+                    os = ("C")
+                    user = ("Users")
+                    command = input(f"{os}:/{user}/{access}> ")
+                elif awalan == 1:
+                    os = ("C")
+                    user = ("Users")
+                    command = input(f"{os}:/{user}> ")
+                elif awalan == 2:
+                    os = ("C")
+                    command = input(f"{os}:/> ")
+                elif awalan == 3:
+                    os = ("D")
+                    command = input(f"{os}:/> ")
+                else:
+                    print()
 
-access = login(username)
+                if command.lower() == "log out":
+                    break
+                elif command.lower() == "date":
+                        waktu()
+                elif command.lower()=="cls":
+                    clear_screen()
+                elif command.lower().startswith("dir"):
+                    direc(command,dir,dir2)
+                elif command.lower().startswith("mkdir"):
+                    makedir(command,dir)
+                elif command.lower().startswith("rmdir"):
+                    remdir(command,dir)
+                elif command.lower() =='time':
+                    timing()
+                elif command.lower() == "d:":
+                    awalan = switch(command)
+                elif command.lower() == "c:":
+                    awalan = switchB(command)
+                elif command.lower().startswith("cd"):
+                    awalan = back(command,awalan,access)
+                elif command.lower() == "help":
+                    print("""For more information on a specific command, type HELP command-name
+        CLS            Clears the screen.
+        DEL            Deletes one or more files.
+        DATE           Displays or sets the date.
+        DIR            Displays a list of files and subdirectories in a directory.
+        EXIT           Quits the CMD.EXE program (command interpreter).
+        HELP           Provides Help information for Windows commands.
+        RMDIR          Removes a directory.
+        TIME           Displays or sets the system time.        
+        For more information on tools see the command-line reference in the online help""")
+            
+                else:
+                    print(f"Perintah tidak dikenali: {command}")
+                
 
-if access:
-    awalan = 0
-    while True:
-        if awalan == 0:
-            os = ("C")
-            user = ("Users")
-            command = input(f"{os}:/{user}/{access}> ")
-        elif awalan == 1:
-            os = ("C")
-            user = ("Users")
-            command = input(f"{os}:/{user}> ")
-        elif awalan == 2:
-            os = ("C")
-            command = input(f"{os}:/> ")
-        elif awalan == 3:
-            os = ("D")
-            command = input(f"{os}:/> ")
-        else:
-            print()
-
-        if command.lower() == "exit":
-                break
-        elif command.lower() == "date":
-                waktu()
-        elif command.lower()=="cls":
-            clear_screen()
-        elif command.lower().startswith("dir"):
-            direc(command,dir,dir2)
-        elif command.lower().startswith("mkdir"):
-            makedir(command,dir)
-        elif command.lower().startswith("rmdir"):
-            remdir(command,dir)
-        elif command.lower() =='time':
-            timing()
-        elif command.lower() == "d:":
-            awalan = switch(command)
-        elif command.lower() == "c:":
-            awalan = switchB(command)
-        elif command.lower().startswith("cd"):
-            awalan = back(command,awalan)
-        elif command.lower() == "help":
-            print("""For more information on a specific command, type HELP command-name
-CLS            Clears the screen.
-DEL            Deletes one or more files.
-DATE           Displays or sets the date.
-DIR            Displays a list of files and subdirectories in a directory.
-EXIT           Quits the CMD.EXE program (command interpreter).
-HELP           Provides Help information for Windows commands.
-RMDIR          Removes a directory.
-TIME           Displays or sets the system time.        
-For more information on tools see the command-line reference in the online help""")
-    
-        else:
-            print(f"Perintah tidak dikenali: {command}")
-        
+    elif jwb.lower() =="shutdown":
+        break
+    else:
+        print (f"Perintah Tidak Dikenali")
 
 shutdown()
